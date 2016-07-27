@@ -18,6 +18,7 @@ ctx.shadowBlur = "black";
 ctx.shadowBlur = 20;
 var frameRate = 30;
 var delay = 25;  // Unit Delay <<TEST>>
+var delayMax = 25;
 
 var renderLoop = function() {
     ctx.beginPath();
@@ -40,8 +41,16 @@ var renderLoop = function() {
             towerList[i].drawLaser();
         }
     }
+    
     if(newTowerButton.press) {
         newTowerButton.drawOutline();
+        mouseOutline.drawOutline();
+    }
+    
+    for(i in towerList) {
+        if(towerList[i].clicked == true) {
+            towerList[i].drawMenu();
+        }
     }
     
     //Makes boundaries visible in red
@@ -60,10 +69,22 @@ var renderLoop = function() {
 };
 
 var logicLoop = function() {
+    
     // Add units to game <<TEST>>
     if (delay < 0) {
-        addUnit();
-        delay = 25;  // Reset delay
+        
+        spawnUnit(curWave);
+        if (curWave.unitCount <= 0) {
+            //temp set wave back to wave 0
+            //curWave = createWave(curWave.waveNumber+1);
+            if (curWave.waveNumber < waveUnits.length-1) {
+                curWave = createWave(curWave.waveNumber+1);
+            }
+            else {
+                //spawn no more units
+            }
+        }
+        delay = delayMax;  // Reset delay
     }
     delay--;
     

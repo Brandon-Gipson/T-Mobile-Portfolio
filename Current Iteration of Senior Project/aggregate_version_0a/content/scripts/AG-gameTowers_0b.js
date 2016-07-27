@@ -28,6 +28,7 @@ function tower(x,y) {
     this.height = 40;
     this.centerX = this.x + (this.width / 2);
     this.centerY = this.y + (this.height / 2);
+    this.clicked = false;
     
     // Tower Attack Attributes
     this.laserColor = 'gray';
@@ -38,6 +39,9 @@ function tower(x,y) {
     this.range = 100;
     this.removeTower = false;  // Set to true have tower removed
     this.target = null;
+    this.redCount = 0;
+    this.blueCount = 0;
+    this.greenCount = 0;
   
     // Tower Upgrade Gems
     this.slot1 = {
@@ -91,14 +95,71 @@ tower.prototype.draw = function() {
     ctx.strokeStyle = 'black';
     ctx.strokeRect(this.x, this.y, this.height, this.width);
     
-    //These draw the various gems in their slots
-    ctx.fillStyle = this.slot1.color;
-    ctx.fillRect(this.x + 16, this.y + 9, 10, 10);
-    ctx.fillStyle=this.slot2.color;
-    ctx.fillRect(this.x + 8, this.y + 22, 10, 10);
-    ctx.fillStyle=this.slot3.color;
-    ctx.fillRect(this.x + 22, this.y + 22, 10, 10);
 };
+
+/* Rendering Function: Draws the tower's menu */
+tower.prototype.drawMenu = function() {
+    var xOffset = this.x - 10;
+    var yOffset = this.y - 10;
+    
+    //draws the menu background
+    ctx.fillStyle = "#e4d2ba";
+    ctx.fillRect(xOffset, yOffset, this.width + 35, this.height +  125);
+    ctx.strokeStyle = 'black';
+    ctx.strokeRect(xOffset, yOffset, this.width + 35, this.height +  125);
+    
+    //Basic stats
+    ctx.fillStyle = "black";
+    ctx.textAlgn = "left";
+    ctx.textBaseline = "center";
+    ctx.font = "Bold 11px Arial";
+    ctx.fillText("Stats:", this.x - 3, this.y);
+    ctx.font = "Bold 8px Arial";
+    ctx.fillText("Range - " + this.range, this.x, this.y + 15);
+    ctx.fillText("DPS - " + this.damage, this.x, this.y + 25);
+    
+    //Gem slots. The word color changes to match the gem
+    ctx.font = "Bold 11px Arial";
+    ctx.fillText("Gems:", this.x - 3, this.y + 40);
+    
+    ctx.font = "Bold 8px Arial";
+    ctx.fillStyle = this.slot1.color;
+    if(this.slot1.color == "gray") {
+        ctx.fillText("none", this.x, this.y + 55);
+    }
+    else {
+       ctx.fillText(this.slot1.color, this.x, this.y + 55); 
+    }
+    
+    ctx.fillStyle = this.slot2.color;
+    if(this.slot2.color == "gray") {
+        ctx.fillText("none", this.x, this.y + 65);
+    }
+    else {
+       ctx.fillText(this.slot2.color, this.x, this.y + 65); 
+    }
+    
+    ctx.fillStyle = this.slot3.color;
+    if(this.slot3.color == "gray") {
+        ctx.fillText("none", this.x, this.y + 75);
+    }
+    else {
+       ctx.fillText(this.slot3.color, this.x, this.y + 75); 
+    }
+    
+    //Bonuses give by gems
+    ctx.fillStyle = "black";
+    ctx.font = "Bold 11px Arial";
+    ctx.fillText("Bonuses:", this.x - 3, this.y + 90);
+    ctx.font = "Bold 8px Arial";
+    ctx.fillStyle = "red";
+    ctx.fillText("+" + this.redCount + " damage", this.x, this.y + 105);
+    ctx.fillStyle = "blue";
+    ctx.fillText("+" + this.blueCount + " range", this.x, this.y + 120);
+    ctx.fillStyle = "green";
+    ctx.fillText("+" + this.greenCount + " targets", this.x, this.y + 135);
+    
+}
   
 /* Rendering Function: Draws the laser from tower to the enemy */
 tower.prototype.drawLaser = function() {
@@ -108,7 +169,7 @@ tower.prototype.drawLaser = function() {
     ctx.strokeStyle = this.laserColor;
     ctx.lineWidth = this.laserWidth;
     ctx.stroke();
-}
+};
   
 /* Logic Function: Deals damage to a targeted unit */
 tower.prototype.shoot = function(){

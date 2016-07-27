@@ -41,4 +41,5 @@ function loadPlayer() {
     hearts.updateCurrent(player.health);
     hearts.updateMax(player.maxhealth);
     coins.update(player.coins);
+    curWave = createWave(player.waveNumber);
 }

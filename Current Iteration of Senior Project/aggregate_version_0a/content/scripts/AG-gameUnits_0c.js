@@ -98,14 +98,14 @@ unit.prototype.draw = function() {
 };
 
 /*********************** Unit Utility Functions *****************************/
-var addUnit = function() {
+var addUnit = function(R, G, B, healthMod) {
     // Randomly select a new unit from availible units
     //var newUnit;
     //var newUnitType = Math.floor(Math.random() * unitTypeList.length);
     //newUnit = new unitTypeList[newUnitType]();
     
-    var newUnit = new colorBlock(gRed,gGreen,gBlue);
-    incrementColor();
+    var newUnit = new colorBlock(R,G,B, healthMod);
+    //incrementColor();
 
     // Set initial waypoint
     newUnit.x = waypointList[0].x;
@@ -188,7 +188,7 @@ function incrementColor() {
     }
 }
 
-function colorBlock(R,G,B) {
+function colorBlock(R,G,B, healthMod) {
     unit.call(this);  // Call unit superclass constructor
     // Set Color Block Parameters
     this.color = getColor(R,G,B);
@@ -202,7 +202,7 @@ function colorBlock(R,G,B) {
     var SPEED_FACTOR = [0.8, 1, 1.5, 2];
     
     this.speed = SPEED_FACTOR[G];
-    this.setFullHealth(HEALTH_FACTOR[R]);
+    this.setFullHealth( HEALTH_FACTOR[R] * healthMod );
     this.height = 20 * SIZE_FACTOR[B];
     this.width = this.height;
 }

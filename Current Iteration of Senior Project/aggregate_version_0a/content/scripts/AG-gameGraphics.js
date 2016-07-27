@@ -148,6 +148,25 @@ var newTowerButton = {
   }
 };
 
+/******************************************
+ * An object to draw bounds outline around
+ * mouse for tower placement
+ * ***************************************/
+ var mouseOutline = {
+   x: 0,
+   y: 0,
+   width: 40,
+   height: 40,
+   color: "red",
+   
+   drawOutline: function() {
+    ctx.lineWidth = '3';
+    ctx.strokeStyle = this.color;
+    ctx.strokeRect(this.x, this.y, this.width, this.height); 
+   },
+
+ };
+
 /***************************************
  * An object that contains coordinates
  * for the game map's boundaries for the
